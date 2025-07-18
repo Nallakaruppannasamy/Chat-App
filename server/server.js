@@ -11,10 +11,16 @@ import { Server } from "socket.io";
 const app = express();
 const server = http.createServer(app);
 
+// ✅ Allow both local and deployed frontend URLs
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://chat-app-zeta-ruddy.vercel.app"
+];
+
 // Initialize socket.io server with proper CORS
 export const io = new Server(server, {
   cors: {
-    origin: "https://chat-app-zeta-ruddy.vercel.app", // 🔁 your frontend URL
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -48,7 +54,7 @@ io.on("connection", (socket) => {
 // Middleware
 app.use(express.json({ limit: "4mb" }));
 app.use(cors({
-  origin: "https://chat-app-zeta-ruddy.vercel.app", // 🔁 same as above
+  origin: allowedOrigins,
   credentials: true
 }));
 
